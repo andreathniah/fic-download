@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/normalize.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
-    
+
 <body>
     <div class="container">
         <div class="row">
@@ -52,7 +52,7 @@
                 <li>Support for other ebooks formats</li>
                 <li>Hyperlink for content page</li>
             </ul>
-        
+
         </div>
     </div>
 </body>
@@ -62,50 +62,49 @@
         var alertMessage = "Please disable CORS with plugin available at https://goo.gl/hjm68i to use this service. This limitation will cease once we migrate to a server!";
 //        alert(alertMessage);
     });
-    
+
     function storeURL() {
         var urlValue, typeURL, domain;
-        
+
         if (typeof(Storage) !== "undefined") {
             urlValue = document.getElementById("urlInput").value;
-            localStorage.setItem("urlInput", urlValue);            
-            
+            localStorage.setItem("urlInput", urlValue);
+
             // convert to lowercase
             urlValue = urlValue.toLowerCase();
-            
+
             typeURL = determineType(urlValue);
             switch (typeURL) {
                 case 0: window.open("fanfictionNet.html", "_blank");
                     break;
                 case 1: window.open("asianFanfiction.html", "_blank");
                     break;
-                default: 
+                default:
                     domain = getDomain(urlValue);
                     alert(domain + " is not supported.");
             }
-            
+
             document.getElementById("urlInput").value = "";
         }
         else {
             alert("Browser not compatible with localStorage");
         }
     }
-    
+
     function determineType(urlString) {
-        var searchString = ["fanfiction.net", "asianfanfics"] 
-        
+        var searchString = ["fanfiction.net", "asianfanfics"]
+
         for (i=0; i<searchString.length; i++) {
             if (urlString.search(searchString[i]) != -1) {
                 return i;
             }
         }
     }
-    
+
     function getDomain(urlString) {
-        var urlArray = urlString.split("/");     
+        var urlArray = urlString.split("/");
         return urlArray[2].toString();
     }
-    
+
 </script>
 </html>
-
