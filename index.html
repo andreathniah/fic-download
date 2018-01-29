@@ -16,53 +16,10 @@
                 <input class="button three columns u-pull-right" type="submit" value="Submit" onclick="storeURL()">
             </form>
         </div>
-        <div class="row" id="technicalReport">
-            <p><strong>Technical Report</strong></p>
-            <p>Limitations known:</p>
-            <ul>
-                <li>Support on .epub and .mobi only available via Calibre package's ebook-convert utility, which requires a server</li>
-                <li>
-                    Cross-origin resource sharing (CORS) have to be disabled on client's browser end.
-                    <ul>
-                        <li><strong>Alternative:</strong> migrate to server - probably with node.js</li>
-                    </ul>
-                </li>
-                <li>
-                    Formatting error with jsPDF library. It does not parse UTF-8 properly
-                    <ul>
-                        <li><strong>Alternative:</strong> open window.print() dialogue and get user to save PDF from that end (dependent on which browser users use) </li>
-                    </ul>
-                </li>
-            </ul>
-            <p>To-do List:</p>
-            <ul>
-                <li>Add IE support for XMLHttpRequest</li>
-                <li>
-                    CSS refurbishment
-                    <ul>
-                        <li>Create a proper loading gif icon</li>
-                    </ul>
-                </li>
-                <li>
-                    Support for other fanfiction websites
-                    <ul>
-                        <li>Validate which website</li>
-                    </ul>
-                </li>
-                <li>Support for other ebooks formats</li>
-                <li>Hyperlink for content page</li>
-            </ul>
-
-        </div>
     </div>
 </body>
 
 <script>
-    $(function() {
-        var alertMessage = "Please disable CORS with plugin available at https://goo.gl/hjm68i to use this service. This limitation will cease once we migrate to a server!";
-//        alert(alertMessage);
-    });
-
     function storeURL() {
         var urlValue, typeURL, domain;
 
@@ -72,8 +29,8 @@
 
             // convert to lowercase
             urlValue = urlValue.toLowerCase();
-
             typeURL = determineType(urlValue);
+
             switch (typeURL) {
                 case 0: window.open("fanfictionNet.html", "_blank");
                     break;
@@ -92,7 +49,7 @@
     }
 
     function determineType(urlString) {
-        var searchString = ["fanfiction.net", "asianfanfics"]
+        var searchString = ["fanfiction.net", "asianfanfics"];
 
         for (i=0; i<searchString.length; i++) {
             if (urlString.search(searchString[i]) != -1) {

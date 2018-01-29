@@ -1,5 +1,5 @@
 // https://www.asianfanfics.com/story/view/1192719/11/yes-ma-am-friendship-romance-teacher-school-exo-chen-firstfrost (members, subscribers only)
-
+// issue when the given url is not a chaptered number
 
 $(function() {
   var requestedURL = localStorage.getItem("urlInput");
@@ -7,7 +7,7 @@ $(function() {
   loadChapterNo(requestedURL, function(databox) {
     m18Status = databox.getElementById("is_of_age"); //M18 tag
 
-    console.log(m18Status);
+    console.log("m18Status = " + m18Status);
     if (m18Status != null) {
       databox.getElementsByTagName("form")[1].submit();
       // maybe need to refresh the page?
@@ -21,66 +21,125 @@ $(function() {
 });
 
 function executeScrapping(requestedURL, databox) {
+  var htmlArray = [];
+  var counter = 0; // need to consider the overview pagge
   var chapterNo = getChapterNo(databox);
-
+  console.log("Total no of chapters: " + chapterNo);
+  // from foreword to last chapter
   for (i=0; i<=chapterNo; i++) {
-      // from foreword to last chapter
       var updatedURL = updateURL(requestedURL, i);
-      loadStoryContent(updatedURL, i);
+      htmltoArray(updatedURL, htmlArray, i, function(resultbox) {
+        progressMsg = "fetching " + (counter++) + " of " + chapterNo;
+        document.getElementById("progress").innerHTML = progressMsg;
+
+        if (counter > chapterNo) {
+          for (j=0; j<=chapterNo; j++) {
+            loadStoryContent(resultbox[j], j);
+          }
+          document.getElementById("progress").outerHTML = "";
+          document.getElementById("loading").outerHTML = "";
+        }
+      });
   }
   document.getElementById("storyContent").style.visibility = "visible";
-  document.getElementById("loading").outerHTML = "";
 }
 
 
 // XMLHttpRequest to grab URL's HTML information
-function loadStoryContent(requestedURL, index) {
+function loadStoryContent(htmlContent, index) {
+  // append the summary
+  if (index == 0) {
+    var summaryDiv = document.getElementById("summary-container");
+    var summaryContent = htmlContent.getElementById("bodyText");
+    summaryDiv.appendChild(summaryContent);
+  }
+  else {
+    var storyDiv = document.getElementById("story-container");
+    var storyContent = htmlContent.getElementById("user-submitted-body");
+    var chapterSelect = htmlContent.getElementsByClassName("chapter-nav");
+
+    // get drop-down-list text and value
+    var selectedText = chapterSelect[0].options[chapterSelect[0].selectedIndex].text;
+    var selectedValue = chapterSelect[0].options[chapterSelect[0].selectedIndex].value;
+    console.log(selectedText);
+
+    var titleNode = document.createElement("p");
+    titleNode.style.cssText = "font-weight: bold";
+    titleNode.append(selectedText); // append because its not a node, its a normal string
+
+    var storyNode = document.createElement("div");
+    storyNode.id = "chapter-" + selectedValue;
+    storyNode.className = "row twelve columns chapter-container";
+
+    storyNode.appendChild(titleNode);
+    storyNode.appendChild(storyContent);
+    storyDiv.appendChild(storyNode);
+  }
+}
+
+function htmltoArray(requestedURL, htmlArray, index, callback) {
   var xhttp = new XMLHttpRequest();
-  var proxyURL = getProxyURL(requestedURL); // ERROR HERE
+  var proxyURL = getProxyURL(requestedURL);
 
-  xhttp.open("GET", proxyURL, false);
+  xhttp.open("GET", proxyURL, true);
   xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
+    if (xhttp.readyState == 4 && xhttp.status == 200 && callback) {
       var httpDoc = domParse(xhttp.responseText);
-
-      if (index == 0) {
-        console.log("Appending summary...");
-        var summaryDiv = document.getElementById("summary-container");
-        var summaryContent = httpDoc.getElementById("bodyText");
-        summaryDiv.appendChild(summaryContent);
-      }
-      else {
-        var storyDiv = document.getElementById("story-container");
-        getStoryContent(httpDoc, storyDiv);
-      }
+      htmlArray[index] = httpDoc;
+      callback(htmlArray);
     }
   }
   xhttp.send();
 }
 
+// // XMLHttpRequest to grab URL's HTML information
+// function loadStoryContent(requestedURL, index) {
+//   var xhttp = new XMLHttpRequest();
+//   var proxyURL = getProxyURL(requestedURL); // ERROR HERE
+//
+//   xhttp.open("GET", proxyURL, false);
+//   xhttp.onreadystatechange = function() {
+//     if (xhttp.readyState == 4 && xhttp.status == 200) {
+//       var httpDoc = domParse(xhttp.responseText);
+//
+//       if (index == 0) {
+//         console.log("Appending summary...");
+//         var summaryDiv = document.getElementById("summary-container");
+//         var summaryContent = httpDoc.getElementById("bodyText");
+//         summaryDiv.appendChild(summaryContent);
+//       }
+//       else {
+//         var storyDiv = document.getElementById("story-container");
+//         getStoryContent(httpDoc, storyDiv);
+//       }
+//     }
+//   }
+//   xhttp.send();
+// }
+
 // isolate needed HTML content render it to innerHTML
-function getStoryContent(httpDoc, storyDiv) {
-  var storyContent = httpDoc.getElementById("user-submitted-body");
-  var chapterSelect = httpDoc.getElementsByClassName("chapter-nav");
-
-  // get drop-down-list text and value
-  var selectedText = chapterSelect[0].options[chapterSelect[0].selectedIndex].text;
-  var selectedValue = chapterSelect[0].options[chapterSelect[0].selectedIndex].value;
-  console.log(selectedText);
-
-  var titleNode = document.createElement("p");
-  titleNode.style.cssText = "font-weight: bold";
-  titleNode.append(selectedText); // append because its not a node, its a normal string
-
-  var storyNode = document.createElement("div");
-  storyNode.id = "chapter-" + selectedValue;
-  storyNode.className = "row twelve columns chapter-container";
-
-  storyNode.appendChild(titleNode);
-  storyNode.appendChild(storyContent);
-  storyDiv.appendChild(storyNode);
-
-}
+// function getStoryContent(httpDoc, storyDiv) {
+//   var storyContent = httpDoc.getElementById("user-submitted-body");
+//   var chapterSelect = httpDoc.getElementsByClassName("chapter-nav");
+//
+//   // get drop-down-list text and value
+//   var selectedText = chapterSelect[0].options[chapterSelect[0].selectedIndex].text;
+//   var selectedValue = chapterSelect[0].options[chapterSelect[0].selectedIndex].value;
+//   console.log(selectedText);
+//
+//   var titleNode = document.createElement("p");
+//   titleNode.style.cssText = "font-weight: bold";
+//   titleNode.append(selectedText); // append because its not a node, its a normal string
+//
+//   var storyNode = document.createElement("div");
+//   storyNode.id = "chapter-" + selectedValue;
+//   storyNode.className = "row twelve columns chapter-container";
+//
+//   storyNode.appendChild(titleNode);
+//   storyNode.appendChild(storyContent);
+//   storyDiv.appendChild(storyNode);
+//
+// }
 
 // XMLHttpRequest callback to grab total no of chapters
 function loadChapterNo(requestedURL, callback) {
