@@ -17,7 +17,6 @@ $(function() {
   loadChapterNo(requestedURL, function(databox) {
     executeScrapping(requestedURL, databox);
   });
-
 });
 
 function executeScrapping(requestedURL, databox) {
@@ -41,6 +40,8 @@ function executeScrapping(requestedURL, databox) {
         }
       });
   }
+  var hello = document.getElementsByClassName("click-to-read-full");
+  console.log(hello);
   document.getElementById("storyContent").style.visibility = "visible";
 }
 
@@ -91,55 +92,6 @@ function htmltoArray(requestedURL, htmlArray, index, callback) {
   }
   xhttp.send();
 }
-
-// // XMLHttpRequest to grab URL's HTML information
-// function loadStoryContent(requestedURL, index) {
-//   var xhttp = new XMLHttpRequest();
-//   var proxyURL = getProxyURL(requestedURL); // ERROR HERE
-//
-//   xhttp.open("GET", proxyURL, false);
-//   xhttp.onreadystatechange = function() {
-//     if (xhttp.readyState == 4 && xhttp.status == 200) {
-//       var httpDoc = domParse(xhttp.responseText);
-//
-//       if (index == 0) {
-//         console.log("Appending summary...");
-//         var summaryDiv = document.getElementById("summary-container");
-//         var summaryContent = httpDoc.getElementById("bodyText");
-//         summaryDiv.appendChild(summaryContent);
-//       }
-//       else {
-//         var storyDiv = document.getElementById("story-container");
-//         getStoryContent(httpDoc, storyDiv);
-//       }
-//     }
-//   }
-//   xhttp.send();
-// }
-
-// isolate needed HTML content render it to innerHTML
-// function getStoryContent(httpDoc, storyDiv) {
-//   var storyContent = httpDoc.getElementById("user-submitted-body");
-//   var chapterSelect = httpDoc.getElementsByClassName("chapter-nav");
-//
-//   // get drop-down-list text and value
-//   var selectedText = chapterSelect[0].options[chapterSelect[0].selectedIndex].text;
-//   var selectedValue = chapterSelect[0].options[chapterSelect[0].selectedIndex].value;
-//   console.log(selectedText);
-//
-//   var titleNode = document.createElement("p");
-//   titleNode.style.cssText = "font-weight: bold";
-//   titleNode.append(selectedText); // append because its not a node, its a normal string
-//
-//   var storyNode = document.createElement("div");
-//   storyNode.id = "chapter-" + selectedValue;
-//   storyNode.className = "row twelve columns chapter-container";
-//
-//   storyNode.appendChild(titleNode);
-//   storyNode.appendChild(storyContent);
-//   storyDiv.appendChild(storyNode);
-//
-// }
 
 // XMLHttpRequest callback to grab total no of chapters
 function loadChapterNo(requestedURL, callback) {
@@ -222,4 +174,33 @@ function domParse(data) {
   var httpDoc = parser.parseFromString(data, "text/html");
 
   return httpDoc;
+}
+
+function sendToServer() {
+  console.log("POST request sent to server");
+  var oReq = new XMLHttpRequest();
+  oReq.open("POST", "/topdf", true);
+  //Send the proper header information along with the request
+  oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  oReq.responseType = "blob";
+
+  oReq.onload = function(oEvent) {
+    var blob = oReq.response;
+    //Create a link element, hide it, direct
+    //it towards the blob, and then 'click' it programatically
+    let a = document.createElement("a");
+    a.style = "display: none";
+    document.body.appendChild(a);
+    //Create a DOMString representing the blob
+    //and point the link element towards it
+    let url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = 'myFile.pdf';
+    //programatically click the link to trigger the download
+    a.click();
+    //release the reference to the file by revoking the Object URL
+    window.URL.revokeObjectURL(url);
+    console.log("This will take a while...");
+  };
+  oReq.send(document.documentElement.outerHTML);
 }

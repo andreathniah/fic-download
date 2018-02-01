@@ -10,7 +10,7 @@ $(function() {
       updatedURL = updateURL(requestedURL, i);
       htmlToArray(updatedURL, htmlArray, i, function(databox) {
         // progress index
-        progressMsg = "fetching " + (counter++) + " of " + chapterNo;
+        progressMsg = "Fetching " + (counter++) + " of " + chapterNo + " chapters.";
         document.getElementById("progress").innerHTML = progressMsg;
 
         if (counter == chapterNo) {
@@ -189,4 +189,33 @@ function domParse(data) {
   var httpDoc = parser.parseFromString(data, "text/html");
 
   return httpDoc;
+}
+
+function sendToServer() {
+  console.log("POST request sent to server");
+  var oReq = new XMLHttpRequest();
+  oReq.open("POST", "/topdf", true);
+  //Send the proper header information along with the request
+  oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  oReq.responseType = "blob";
+
+  oReq.onload = function(oEvent) {
+    var blob = oReq.response;
+    //Create a link element, hide it, direct
+    //it towards the blob, and then 'click' it programatically
+    let a = document.createElement("a");
+    a.style = "display: none";
+    document.body.appendChild(a);
+    //Create a DOMString representing the blob
+    //and point the link element towards it
+    let url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = 'myFile.pdf';
+    //programatically click the link to trigger the download
+    a.click();
+    //release the reference to the file by revoking the Object URL
+    window.URL.revokeObjectURL(url);
+    console.log("This will take a while...");
+  };
+  oReq.send(document.documentElement.outerHTML);
 }
