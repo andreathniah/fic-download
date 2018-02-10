@@ -31,6 +31,7 @@ app.get('/', function(req, res) {
 
 app.post('/topdf', function(req, res) {
   console.log("POST request received from client");
+
   var htmlContent = JSON.stringify(req.body);
   var escapedHtml = htmlContent.replace(/\\n/g, "")
                                   .replace(/\\/g, "")
@@ -68,3 +69,16 @@ app.post('/topdf', function(req, res) {
 
   });
 });
+
+
+// const util = require('util');
+// let s = util.inspect(req.body).split(`Content-Disposition: form-data; name`);
+// s.splice(0,1);
+// let r=`{"`;
+// s.forEach((e)=>{
+//   r+=e.split(`\\r\\n------`)[0].replace(`"\\r\\n\\r\\n`,`":"`)
+//                               .replace(`\': \'"`,``)
+//                               .replace(`=`,``) +`",`
+// });
+// s=r.slice(0,-1)+`}`;
+// console.log(s);

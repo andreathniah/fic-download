@@ -1,21 +1,23 @@
 {
   "name": "ficdownload",
   "version": "1.0.0",
-  "description": "test ajax",
+  "description": "server for ficdownload",
   "main": "ficdownload.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Andrea Thniah",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
     "cors-anywhere": "^0.4.1",
     "express": "^4.16.2",
     "html-pdf": "^2.2.0",
-    "nunjucks": "^3.0.1",
     "save": "^2.3.2"
   },
+  "keywords": [
+    "heroku"
+  ],
   "engines": {
     "node": "8.9.4"
   }

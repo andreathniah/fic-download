@@ -1,5 +1,4 @@
 // https://www.asianfanfics.com/story/view/1192719/11/yes-ma-am-friendship-romance-teacher-school-exo-chen-firstfrost (members, subscribers only)
-// issue when the given url is not a chaptered number
 
 $(function() {
   var requestedURL = localStorage.getItem("urlInput");
