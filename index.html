@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fic-Downloader</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="container landing">
+      <div class="row">
+        <h2>Fic-Downloader</h2>
+        <p>Tired of clicking the next button for your chapters?<br>
+          Fic-Downloader helps you load them all into a single page and is totally downloadable!</p>
+        <p>Currently supports
+          <a href="https://www.fanfiction.net/" target="_blank">Fanfiction.net</a>
+          and
+          <a href="https://www.asianfanfics.com" target="_blank">AsianFanfics.com</a>
+          domains!</p>
+      </div>
+      <div class="row">
+        <form>
+          <input class="nine columns u-full-width" type="text" placeholder="Fanfiction URL" id="urlInput">
+          <input class="button three columns u-pull-right" style="white-space: normal" type="submit" value="Retrieve Fanfiction" onclick="storeURL()">
+        </form>
+      </div>
+      <div class="row">
+        <span>
+          <strong>[10/2/2018]</strong>
+        </span>
+        Unstable release -
+        <a href="https://ficdownloader.herokuapp.com/" target="_blank">PDF support added for FNN!</a>.</div>
+    </div>
+  </body>
+
+  <script>
+    function storeURL() {
+      var urlValue,
+        typeURL,
+        domain;
+
+      if (typeof(Storage) !== "undefined") {
+        urlValue = document.getElementById("urlInput").value;
+        // convert to lowercase
+        urlValue = urlValue.toLowerCase();
+        typeURL = determineType(urlValue);
+
+        switch (typeURL) {
+          case 0:
+            window.open("fanfictionNet.html", "_blank");
+            break;
+          case 1:
+            window.open("asianFanfiction.html", "_blank");
+            break;
+          default:
+            domain = getDomain(urlValue);
+            alert(domain + " is not supported.");
+        }
+
+        document.getElementById("urlInput").value = "";
+      } else {
+        alert("Browser not compatible with localStorage");
+      }
+    }
+
+    function determineType(urlString) {
+      var searchString = ["fanfiction.net", "asianfanfics"];
+
+      for (i = 0; i < searchString.length; i++) {
+        if (urlString.search(searchString[i]) != -1) {
+          return i;
+        }
+      }
+    }
+
+    function getDomain(urlString) {
+      var urlArray = urlString.split("/");
+      return urlArray[2].toString();
+    }
+  </script>
+</html>
