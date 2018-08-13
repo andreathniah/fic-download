@@ -97,11 +97,9 @@ function loadChapterNo(requestedURL, callback) {
 
 // isolate nav-bar to get the last digit of the chapter
 function getChapterNo(httpDoc) {
-	var chapterNo, lastValue;
-
-	lastValue = httpDoc.querySelector("#top > div:nth-child(7) > a:nth-child(1)")
-		.innerHTML;
-
+	const lastValue = httpDoc
+		.querySelectorAll("#top > div[align]")[0]
+		.querySelector("a").innerHTML;
 	return lastValue;
 }
 
