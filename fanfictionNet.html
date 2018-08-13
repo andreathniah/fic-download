@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fanfiction.net</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fanfiction.net</title>
 
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/normalize.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-123756712-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
 
-</head>
-<body>
-<body>
-<!--  <input class="u-pull-right" type="submit" value="PDF" id="downloadPDF" onclick="sendToServer()">-->
-  <div class="row pull-center" id="loading">You are at <strong>Fanfiction.net</strong>
-    <div class="pull-center" id="progress"></div>
-  </div>
-  <div class="container" id="storyContent" style="visibility: hidden">
-    <div class="row summary-container" id="summary-container"></div>  <!-- add summary here -->
-    <div class="row story-container" id="story-container"></div>
-  </div>
-</body>
+      gtag('config', 'UA-123756712-2');
+    </script>
+  </head>
+  <body>
+    <body>
+      <!-- <input class="u-pull-right" type="submit" value="PDF" id="downloadPDF" onclick="sendToServer()">-->
+      <div class="row pull-center" id="loading">You are at
+        <strong>Fanfiction.net</strong>
+        <div class="pull-center" id="progress"></div>
+      </div>
+      <div class="container" id="storyContent" style="visibility: hidden">
+        <div class="row summary-container" id="summary-container"></div>
+        <!-- add summary here -->
+        <div class="row story-container" id="story-container"></div>
+      </div>
+    </body>
 
-<script src="js/fanfictionNet.js"></script>
-</html>
+    <script src="js/fanfictionNet.js"></script>
+  </html>
